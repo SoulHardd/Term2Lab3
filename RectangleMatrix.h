@@ -1,12 +1,13 @@
 #include <iostream>
 #include <bits/stdc++.h>
+#include "ArraySequence.h"
 template <class T>
 class RectangleMatrix
 {
 private:
     int rows;
     int columns;
-    T **elements;
+    Sequence<T> *elements;
 
 public:
     RectangleMatrix();
@@ -26,14 +27,6 @@ public:
     void AddColumnToColumn(int column_1, int column_2);
     RectangleMatrix<T> *Transpose();
 };
-
-template <class T>
-T RectangleMatrix<T>::Get(int row, int column)
-{
-    if ((row < 0) || (row >= this->rows) || (column < 0) || (column >= this->columns))
-        throw std::out_of_range("index is out of range");
-    return this->elements[row][column];
-}
 
 template <class T>
 RectangleMatrix<T>::RectangleMatrix()
@@ -71,6 +64,14 @@ RectangleMatrix<T>::RectangleMatrix(int rows, int columns, T *elements)
     }
     this->rows = rows;
     this->columns = columns;
+}
+
+template <class T>
+T RectangleMatrix<T>::Get(int row, int column)
+{
+    if ((row < 0) || (row >= this->rows) || (column < 0) || (column >= this->columns))
+        throw std::out_of_range("index is out of range");
+    return this->elements[row][column];
 }
 
 template <class T>
