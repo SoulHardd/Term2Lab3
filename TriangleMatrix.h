@@ -1,5 +1,6 @@
 #include <iostream>
 #include "ArraySequence.h"
+#include "Matrix.h"
 
 typedef enum
 {
@@ -9,7 +10,7 @@ typedef enum
 } TrMatrixType;
 
 template <class T>
-class TriangleMatrix
+class TriangleMatrix : public Matrix<T>
 {
 private:
     Sequence<T> *elements;
@@ -21,12 +22,21 @@ public:
     TriangleMatrix(int rows, int columns);
     TriangleMatrix(int rows, int columns, T *elements, TrMatrixType Mtype);
 
-    void Addition(TriangleMatrix<T> *matrix);
-    void MultiplicationByScalar(T scalar);
+    Matrix<T> *Addition(Matrix<T> *matrix);
+    Matrix<T> *MultiplicationByScalar(T scalar);
     T *MatrixNorm();
     T Get(int row, int column);
-    int GetSize();
-    void Set(T value, int row, int column);
+    Matrix<T> *Set(T value, int row, int column);
+    int GetRowSize();
+    int GetColumnSize();
+
+    Matrix<T> *SwapRows(int row_1, int row_2);
+    Matrix<T> *SwapColumns(int col_1, int col_2);
+    Matrix<T> *MultiplicationRowByNum(int row, T num);
+    Matrix<T> *MultiplicationColumnByNum(int column, T num);
+    Matrix<T> *AddRowToRow(int row_1, int row_2);
+    Matrix<T> *AddColumnToColumn(int column_1, int column_2);
+    Matrix<T> *Transpose();
 };
 
 template <class T>
@@ -82,7 +92,7 @@ TriangleMatrix<T>::TriangleMatrix(int rows, int columns, T *elements, TrMatrixTy
 }
 
 template <class T>
-void TriangleMatrix<T>::Set(T value, int row, int column)
+Matrix<T> *TriangleMatrix<T>::Set(T value, int row, int column)
 {
     if (MType == UPPER)
     {
@@ -122,24 +132,31 @@ T TriangleMatrix<T>::Get(int row, int column)
 }
 
 template <class T>
-int TriangleMatrix<T>::GetSize()
+int TriangleMatrix<T>::GetRowSize()
 {
     return this->size;
 }
 
 template <class T>
-void TriangleMatrix<T>::Addition(TriangleMatrix<T> *matrix)
+int TriangleMatrix<T>::GetColumnSize()
 {
-    if (this->size != matrix->size)
+    return this->size;
+}
+
+template <class T>
+Matrix<T> *TriangleMatrix<T>::Addition(Matrix<T> *matrix)
+{
+    TriangleMatrix<T> *tmp = static_cast<TriangleMatrix<T> *>(matrix);
+    if (this->size != tmp->size)
         throw std::logic_error("matrices have different sizes");
     for (int i = 0; i < this->size; i++)
     {
-        this->elements->InsertAt(this->elements->Get(i) + matrix->elements->Get(i), i);
+        this->elements->InsertAt(this->elements->Get(i) + tmp->elements->Get(i), i);
     }
 }
 
 template <class T>
-void TriangleMatrix<T>::MultiplicationByScalar(T scalar)
+Matrix<T> *TriangleMatrix<T>::MultiplicationByScalar(T scalar)
 {
     if (scalar == 0)
         throw std::logic_error("matrix can't be multiplied by zero scalar");
@@ -191,4 +208,40 @@ T *TriangleMatrix<T>::MatrixNorm()
     }
     Norms[2] = sqrt(Norms[2]);
     return Norms;
+}
+
+template <class T>
+Matrix<T> *TriangleMatrix<T>::SwapColumns(int col_1, int col_2)
+{
+    throw std::logic_error("This action can't be executed for triangle matrix");
+}
+
+template <class T>
+Matrix<T> *TriangleMatrix<T>::MultiplicationRowByNum(int row, T num)
+{
+    throw std::logic_error("This action can't be executed for triangle matrix");
+}
+
+template <class T>
+Matrix<T> *TriangleMatrix<T>::MultiplicationColumnByNum(int column, T num)
+{
+    throw std::logic_error("This action can't be executed for triangle matrix");
+}
+
+template <class T>
+Matrix<T> *TriangleMatrix<T>::AddRowToRow(int row_1, int row_2)
+{
+    throw std::logic_error("This action can't be executed for triangle matrix");
+}
+
+template <class T>
+Matrix<T> *TriangleMatrix<T>::AddColumnToColumn(int column_1, int column_2)
+{
+    throw std::logic_error("This action can't be executed for triangle matrix");
+}
+
+template <class T>
+Matrix<T> *TriangleMatrix<T>::Transpose()
+{
+    throw std::logic_error("This action can't be executed for triangle matrix");
 }

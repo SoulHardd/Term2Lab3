@@ -1,8 +1,10 @@
 #include <iostream>
 #include <bits/stdc++.h>
 #include "ArraySequence.h"
+#include "Matrix.h"
+
 template <class T>
-class RectangleMatrix
+class RectangleMatrix : public Matrix<T>
 {
 private:
     int rows;
@@ -14,22 +16,22 @@ public:
     RectangleMatrix(int rows, int columns);
     RectangleMatrix(int rows, int columns, T *elements);
 
-    void Addition(RectangleMatrix<T> *matrix);
-    void MultiplicationByScalar(const T &scalar);
-    void Set(T value, int row, int column);
-
     T *MatrixNorm();
     T Get(int row, int column);
     int GetRowSize();
     int GetColumnSize();
 
-    void SwapRows(int row_1, int row_2);
-    void SwapColumns(int col_1, int col_2);
-    void MultiplicationRowByNum(int row, T num);
-    void MultiplicationColumnByNum(int column, T num);
-    void AddRowToRow(int row_1, int row_2);
-    void AddColumnToColumn(int column_1, int column_2);
-    RectangleMatrix<T> *Transpose();
+    Matrix<T> *Addition(Matrix<T> *matrix);
+    Matrix<T> *MultiplicationByScalar(T scalar);
+    Matrix<T> *Set(T value, int row, int column);
+
+    Matrix<T> *SwapRows(int row_1, int row_2);
+    Matrix<T> *SwapColumns(int col_1, int col_2);
+    Matrix<T> *MultiplicationRowByNum(int row, T num);
+    Matrix<T> *MultiplicationColumnByNum(int column, T num);
+    Matrix<T> *AddRowToRow(int row_1, int row_2);
+    Matrix<T> *AddColumnToColumn(int column_1, int column_2);
+    Matrix<T> *Transpose();
 };
 
 template <class T>
@@ -57,9 +59,10 @@ RectangleMatrix<T>::RectangleMatrix(int rows, int columns, T *elements)
 }
 
 template <class T>
-void RectangleMatrix<T>::Set(T value, int row, int column)
+Matrix<T> *RectangleMatrix<T>::Set(T value, int row, int column)
 {
     this->elements->InsertAt(value, columns * row + column);
+    return this;
 }
 
 template <class T>
@@ -83,20 +86,22 @@ int RectangleMatrix<T>::GetColumnSize()
 }
 
 template <class T>
-void RectangleMatrix<T>::Addition(RectangleMatrix<T> *matrix)
+Matrix<T> *RectangleMatrix<T>::Addition(Matrix<T> *matrix)
 {
-    if (this->rows != matrix->rows || this->columns != matrix->columns)
+    RectangleMatrix<T> *tmp = static_cast<RectangleMatrix<T> *>(matrix);
+    if (this->rows != tmp->rows || this->columns != tmp->columns)
     {
         throw std::logic_error("matrices have different sizes");
     }
     for (int i = 0; i < rows * columns; i++)
     {
-        this->elements->InsertAt(this->elements->Get(i) + matrix->elements->Get(i), i);
+        this->elements->InsertAt(this->elements->Get(i) + tmp->elements->Get(i), i);
     }
+    return this;
 }
 
 template <class T>
-void RectangleMatrix<T>::MultiplicationByScalar(const T &scalar)
+Matrix<T> *RectangleMatrix<T>::MultiplicationByScalar(T scalar)
 {
     if (scalar == 0)
     {
@@ -106,6 +111,7 @@ void RectangleMatrix<T>::MultiplicationByScalar(const T &scalar)
     {
         this->elements->InsertAt(this->elements->Get(i) * scalar, i);
     }
+    return this;
 }
 
 template <class T>
@@ -158,7 +164,7 @@ T *RectangleMatrix<T>::MatrixNorm()
 }
 
 template <class T>
-void RectangleMatrix<T>::SwapRows(int row_1, int row_2)
+Matrix<T> *RectangleMatrix<T>::SwapRows(int row_1, int row_2)
 {
     if (row_1 < 0 || row_2 < 0 || row_1 > rows || row_2 > rows)
         throw std::out_of_range("rows are out of range");
@@ -169,10 +175,11 @@ void RectangleMatrix<T>::SwapRows(int row_1, int row_2)
         this->elements->InsertAt(this->elements->Get(columns * row_2 + i), columns * row_1 + i);
         this->elements->InsertAt(tmp, columns * row_2 + i);
     }
+    return this;
 }
 
 template <class T>
-void RectangleMatrix<T>::SwapColumns(int col_1, int col_2)
+Matrix<T> *RectangleMatrix<T>::SwapColumns(int col_1, int col_2)
 {
     if (col_1 < 0 || col_2 < 0 || col_1 > columns || col_2 > columns)
         throw std::out_of_range("columns are out of range");
@@ -183,28 +190,31 @@ void RectangleMatrix<T>::SwapColumns(int col_1, int col_2)
         this->elements->InsertAt(this->elements->Get(columns * i + col_2), columns * i + col_1);
         this->elements->InsertAt(tmp, columns * i + col_2);
     }
+    return this;
 }
 
 template <class T>
-void RectangleMatrix<T>::MultiplicationRowByNum(int row, T num)
+Matrix<T> *RectangleMatrix<T>::MultiplicationRowByNum(int row, T num)
 {
     for (int i = 0; i < columns; i++)
     {
         this->elements->InsertAt(this->elements->Get(columns * row + i) * num, columns * row + i);
     }
+    return this;
 }
 
 template <class T>
-void RectangleMatrix<T>::MultiplicationColumnByNum(int column, T num)
+Matrix<T> *RectangleMatrix<T>::MultiplicationColumnByNum(int column, T num)
 {
     for (int i = 0; i < rows; i++)
     {
         this->elements->InsertAt(this->elements->Get(columns * i + column) * num, columns * i + column);
     }
+    return this;
 }
 
 template <class T>
-void RectangleMatrix<T>::AddRowToRow(int row_1, int row_2)
+Matrix<T> *RectangleMatrix<T>::AddRowToRow(int row_1, int row_2)
 {
     if (row_1 < 0 || row_2 < 0 || row_1 > rows || row_2 > rows)
         throw std::out_of_range("rows are out of range");
@@ -212,10 +222,11 @@ void RectangleMatrix<T>::AddRowToRow(int row_1, int row_2)
     {
         this->elements->InsertAt(this->elements->Get(columns * row_1 + i) + this->elements->Get(columns * row_2 + i), columns * row_1 + i);
     }
+    return this;
 }
 
 template <class T>
-void RectangleMatrix<T>::AddColumnToColumn(int col_1, int col_2)
+Matrix<T> *RectangleMatrix<T>::AddColumnToColumn(int col_1, int col_2)
 {
     if (col_1 < 0 || col_2 < 0 || col_1 > columns || col_2 > columns)
         throw std::out_of_range("columns are out of range");
@@ -223,10 +234,11 @@ void RectangleMatrix<T>::AddColumnToColumn(int col_1, int col_2)
     {
         this->elements->InsertAt(this->elements->Get(columns * i + col_1) + this->elements->Get(columns * i + col_2), columns * i + col_1);
     }
+    return this;
 }
 
 template <class T>
-RectangleMatrix<T> *RectangleMatrix<T>::Transpose()
+Matrix<T> *RectangleMatrix<T>::Transpose()
 {
     RectangleMatrix<T> *TransposeMatrix = new RectangleMatrix<T>(columns, rows);
     for (int i = 0; i < rows; i++)
