@@ -17,6 +17,11 @@ public:
         this->elements = new DynamicArray<T>();
     }
 
+    ArraySequence(int size)
+    {
+        this->elements = new DynamicArray<T>(size);
+    }
+
     ArraySequence(T *elements, int size)
     {
         this->elements = new DynamicArray<T>(elements, size);
