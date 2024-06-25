@@ -14,11 +14,11 @@ public:
 
     int GetSize();
     T Get(int index);
-    DynamicArray<T> *GetSubArray(int startIndex, int endIndex); ////////////////
+    DynamicArray<T> *GetSubArray(int startIndex, int endIndex);
 
     void Set(int index, T value);
     void Resize(int newSize);
-    DynamicArray<T> *Concat(DynamicArray<T> *array); //////////
+    DynamicArray<T> *Concat(DynamicArray<T> *array);
 };
 
 template <class T>
