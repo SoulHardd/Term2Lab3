@@ -7,6 +7,7 @@ private:
     int size;
 
 public:
+    ~DynamicArray();
     DynamicArray();
     DynamicArray(int size);
     DynamicArray(T *elements, int size);
@@ -19,6 +20,12 @@ public:
     void Set(int index, T value);
     void Resize(int newSize);
     DynamicArray<T> *Concat(DynamicArray<T> *array);
+};
+
+template <class T>
+DynamicArray<T>::~DynamicArray()
+{
+    delete[] elements;
 };
 
 template <class T>
