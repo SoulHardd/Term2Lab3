@@ -108,6 +108,7 @@ Matrix<T> *TriangleMatrix<T>::Set(T value, int row, int column)
         else
             this->elements->InsertAt(value, size * row + column - ((size - row) * (size - 1) * row) / 2);
     }
+    return this;
 }
 
 template <class T>
@@ -129,6 +130,7 @@ T TriangleMatrix<T>::Get(int row, int column)
         else
             return this->elements->Get(size * row + column - ((size - row) * (size - 1) * row) / 2);
     }
+    return 0;
 }
 
 template <class T>
@@ -149,10 +151,11 @@ Matrix<T> *TriangleMatrix<T>::Addition(Matrix<T> *matrix)
     TriangleMatrix<T> *tmp = static_cast<TriangleMatrix<T> *>(matrix);
     if (this->size != tmp->size)
         throw std::logic_error("matrices have different sizes");
-    for (int i = 0; i < this->size; i++)
+    for (int i = 0; i < (((this->size + 1) * this->size) / 2); i++)
     {
         this->elements->InsertAt(this->elements->Get(i) + tmp->elements->Get(i), i);
     }
+    return this;
 }
 
 template <class T>
@@ -160,10 +163,11 @@ Matrix<T> *TriangleMatrix<T>::MultiplicationByScalar(T scalar)
 {
     if (scalar == 0)
         throw std::logic_error("matrix can't be multiplied by zero scalar");
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < (((this->size + 1) * this->size) / 2); i++)
     {
         this->elements->InsertAt(this->elements->Get(i) * scalar, i);
     }
+    return this;
 }
 
 template <class T>
@@ -208,6 +212,12 @@ T *TriangleMatrix<T>::MatrixNorm()
     }
     Norms[2] = sqrt(Norms[2]);
     return Norms;
+}
+
+template <class T>
+Matrix<T> *TriangleMatrix<T>::SwapRows(int row_1, int row_2)
+{
+    throw std::logic_error("This action can't be executed for triangle matrix");
 }
 
 template <class T>

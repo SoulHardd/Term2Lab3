@@ -198,7 +198,7 @@ void tests()
 
     cout << "Swap rows test\n\n";
     cout << "Square Matrix:\n";
-    SqrMatrix->SwapRows(1, 3);
+    SqrMatrix->SwapRows(0, 2);
     int CorrectSqrMatrixData3[4][4] = {{36, 16, 20, 24}, {20, 24, 28, 32}, {4, 8, 12, 16}, {8, 24, 20, 16}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectSqrMatrixData3[0][0], 4, 4);
@@ -210,7 +210,7 @@ void tests()
         cout << "success\n\n";
 
     cout << "Rectangle Matrix:\n";
-    RectMatrix->SwapRows(1, 2);
+    RectMatrix->SwapRows(0, 1);
     int CorrectRectMatrixData3[2][3] = {{100, 120, 80}, {20, 80, 100}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectRectMatrixData3[0][0], 2, 3);
@@ -225,7 +225,7 @@ void tests()
 
     cout << "Swap columns test\n\n";
     cout << "Square Matrix:\n";
-    SqrMatrix->SwapColumns(2, 4);
+    SqrMatrix->SwapColumns(1, 3);
     int CorrectSqrMatrixData4[4][4] = {{36, 24, 20, 16}, {20, 32, 28, 24}, {4, 16, 12, 8}, {8, 16, 20, 24}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectSqrMatrixData4[0][0], 4, 4);
@@ -237,7 +237,7 @@ void tests()
         cout << "success\n\n";
 
     cout << "Rectangle Matrix:\n";
-    RectMatrix->SwapColumns(1, 3);
+    RectMatrix->SwapColumns(0, 2);
     int CorrectRectMatrixData4[2][3] = {{80, 120, 100}, {100, 80, 20}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectRectMatrixData4[0][0], 2, 3);
@@ -252,7 +252,7 @@ void tests()
 
     cout << "Multiplication row by num test\n\n";
     cout << "Square Matrix:\n";
-    SqrMatrix->MultiplicationRowByNum(2, 3);
+    SqrMatrix->MultiplicationRowByNum(1, 3);
     int CorrectSqrMatrixData5[4][4] = {{36, 24, 20, 16}, {60, 96, 84, 72}, {4, 16, 12, 8}, {8, 16, 20, 24}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectSqrMatrixData5[0][0], 4, 4);
@@ -264,7 +264,7 @@ void tests()
         cout << "success\n\n";
 
     cout << "Rectangle Matrix:\n";
-    RectMatrix->MultiplicationRowByNum(1, 1);
+    RectMatrix->MultiplicationRowByNum(0, 1);
     int CorrectRectMatrixData5[2][3] = {{80, 120, 100}, {100, 80, 20}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectRectMatrixData5[0][0], 2, 3);
@@ -279,7 +279,7 @@ void tests()
 
     cout << "Multiplication column by num test\n\n";
     cout << "Square Matrix:\n";
-    SqrMatrix->MultiplicationColumnByNum(2, 10);
+    SqrMatrix->MultiplicationColumnByNum(1, 10);
     int CorrectSqrMatrixData6[4][4] = {{36, 240, 20, 16}, {60, 960, 84, 72}, {4, 160, 12, 8}, {8, 160, 20, 24}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectSqrMatrixData6[0][0], 4, 4);
@@ -291,7 +291,7 @@ void tests()
         cout << "success\n\n";
 
     cout << "Rectangle Matrix:\n";
-    RectMatrix->MultiplicationColumnByNum(3, 24);
+    RectMatrix->MultiplicationColumnByNum(2, 24);
     int CorrectRectMatrixData6[2][3] = {{80, 120, 2400}, {100, 80, 480}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectRectMatrixData6[0][0], 2, 3);
@@ -306,7 +306,7 @@ void tests()
 
     cout << "Add row to row test\n\n";
     cout << "Square Matrix:\n";
-    SqrMatrix->AddRowToRow(1, 3);
+    SqrMatrix->AddRowToRow(0, 2);
     int CorrectSqrMatrixData7[4][4] = {{40, 400, 32, 24}, {60, 960, 84, 72}, {4, 160, 12, 8}, {8, 160, 20, 24}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectSqrMatrixData7[0][0], 4, 4);
@@ -318,7 +318,7 @@ void tests()
         cout << "success\n\n";
 
     cout << "Rectangle Matrix:\n";
-    RectMatrix->AddRowToRow(2, 1);
+    RectMatrix->AddRowToRow(1, 0);
     int CorrectRectMatrixData7[2][3] = {{80, 120, 2400}, {180, 200, 2880}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectRectMatrixData7[0][0], 2, 3);
@@ -333,7 +333,7 @@ void tests()
 
     cout << "Add column to column test\n\n";
     cout << "Square Matrix:\n";
-    SqrMatrix->AddColumnToColumn(1, 4);
+    SqrMatrix->AddColumnToColumn(0, 3);
     int CorrectSqrMatrixData8[4][4] = {{64, 400, 32, 24}, {132, 960, 84, 72}, {12, 160, 12, 8}, {32, 160, 20, 24}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectSqrMatrixData8[0][0], 4, 4);
@@ -345,7 +345,7 @@ void tests()
         cout << "success\n\n";
 
     cout << "Rectangle Matrix:\n";
-    RectMatrix->AddColumnToColumn(3, 2);
+    RectMatrix->AddColumnToColumn(2, 1);
     int CorrectRectMatrixData8[2][3] = {{80, 120, 2520}, {180, 200, 3080}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectRectMatrixData8[0][0], 2, 3);

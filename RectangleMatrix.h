@@ -245,7 +245,7 @@ Matrix<T> *RectangleMatrix<T>::Transpose()
     {
         for (int j = 0; j < columns; j++)
         {
-            TransposeMatrix->elements->InsertAt(this->elements->Get(columns * i + j), columns * j + i);
+            TransposeMatrix->elements->InsertAt(this->elements->Get(columns * i + j), rows * j + i);
         }
     }
     return TransposeMatrix;

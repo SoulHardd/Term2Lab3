@@ -57,7 +57,7 @@ DiagonalMatrix<T>::DiagonalMatrix(int rows, int columns, T *elements)
     this->size = rows;
     for (int i = 0; i < this->size; i++)
     {
-        this->elements->InsertAt(columns * i + i, i);
+        this->elements->InsertAt(elements[columns * i + i], i);
     }
 }
 
@@ -68,6 +68,7 @@ Matrix<T> *DiagonalMatrix<T>::Set(T value, int row, int column)
         throw std::logic_error("This element can not be set in diagonal matrix");
     else
         this->elements->InsertAt(value, row);
+    return this;
 }
 
 template <class T>
@@ -105,6 +106,7 @@ Matrix<T> *DiagonalMatrix<T>::Addition(Matrix<T> *matrix)
     {
         this->elements->InsertAt(this->elements->Get(i) + tmp->elements->Get(i), i);
     }
+    return this;
 }
 
 template <class T>
@@ -114,8 +116,9 @@ Matrix<T> *DiagonalMatrix<T>::MultiplicationByScalar(T scalar)
         throw std::logic_error("matrix can't be multiplied by zero scalar");
     for (int i = 0; i < this->size; i++)
     {
-        this->elements->InsertAt(this->elements->Get())
+        this->elements->InsertAt(this->elements->Get(i) * scalar, i);
     }
+    return this;
 }
 
 template <class T>
