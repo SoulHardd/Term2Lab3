@@ -1,6 +1,7 @@
 #include <iostream>
-#include "UnifiedMatrices.h"
-#include "Matrix.h"
+#include "RectangleMatrix.h"
+#include "TriangleMatrix.h"
+#include "DiagonalMatrix.h"
 using namespace std;
 
 typedef enum
@@ -88,10 +89,10 @@ void tests()
     Matrix<double> *DiaMatrix;
     Matrix<int> *TriaMatrix;
 
-    SqrMatrix = new UnifiedRectangleMatrix<int>(4, 4, &SqrMatrixData[0][0]);
-    RectMatrix = new UnifiedRectangleMatrix<int>(2, 3, &RectMatrixData[0][0]);
-    DiaMatrix = new UnifiedRectangleMatrix<double>(3, 3, &DiaMatrixData[0][0]);
-    TriaMatrix = new UnifiedRectangleMatrix<int>(5, 5, &TriaMatrixData[0][0]);
+    SqrMatrix = new RectangleMatrix<int>(4, 4, &SqrMatrixData[0][0]);
+    RectMatrix = new RectangleMatrix<int>(2, 3, &RectMatrixData[0][0]);
+    DiaMatrix = new DiagonalMatrix<double>(3, 3, &DiaMatrixData[0][0]);
+    TriaMatrix = new TriangleMatrix<int>(5, 5, &TriaMatrixData[0][0], UPPER);
 
     // Addition test
     cout << "Addition test\n\n";
@@ -359,7 +360,7 @@ void tests()
 
     cout << "Transpose test\n\n";
     cout << "Square Matrix:\n";
-    Matrix<int> *TransposedSqrMatrix = new UnifiedRectangleMatrix<int>;
+    Matrix<int> *TransposedSqrMatrix = new RectangleMatrix<int>;
     TransposedSqrMatrix = SqrMatrix->Transpose();
     int CorrectSqrMatrixData9[4][4] = {{64, 132, 12, 32}, {400, 960, 160, 160}, {32, 84, 12, 20}, {24, 72, 8, 24}};
     cout << "\nExpexted:\n";
@@ -372,7 +373,7 @@ void tests()
         cout << "success\n\n";
 
     cout << "Rectangle Matrix:\n";
-    Matrix<int> *TransposedRectMatrix = new UnifiedRectangleMatrix<int>;
+    Matrix<int> *TransposedRectMatrix = new RectangleMatrix<int>;
     TransposedRectMatrix = RectMatrix->Transpose();
     int CorrectRectMatrixData9[3][2] = {{80, 180}, {120, 200}, {2520, 3080}};
     cout << "\nExpexted:\n";
