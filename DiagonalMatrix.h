@@ -1,70 +1,92 @@
 #include <iostream>
 #include <bits/stdc++.h>
+#include "ArraySequence.h"
+
 template <class T>
 class DiagonalMatrix
 {
 private:
-    T *elements;
-    int length;
+    Sequence<T> *elements;
+    int size;
 
 public:
     DiagonalMatrix();
-    DiagonalMatrix(int length);
-    DiagonalMatrix(int length, T *elements);
+    DiagonalMatrix(int rows, int columns);
+    DiagonalMatrix(int rows, int columns, T *elements);
 
     void Addition(DiagonalMatrix<T> *matrix);
     void MultiplicationByScalar(T scalar);
     T *MatrixNorm();
     T Get(int row, int column);
+    int GetSize();
+    void Set(T value, int row, int column);
 };
-
-template <class T>
-T DiagonalMatrix<T>::Get(int row, int column)
-{
-    if ((row < 0) || (row >= this->length) || (column < 0) || (column >= this->length))
-        throw std::out_of_range("index is out of range");
-    if (row != column)
-        return 0;
-    else
-        return this->elements[row];
-}
 
 template <class T>
 DiagonalMatrix<T>::DiagonalMatrix()
 {
-    elements = nullptr;
-    length = 0;
+    elements = new ArraySequence<T>;
+    size = 0;
 }
 
 template <class T>
-DiagonalMatrix<T>::DiagonalMatrix(int length)
+DiagonalMatrix<T>::DiagonalMatrix(int rows, int columns)
 {
-    elements = new T[length];
-    this->length = length;
+    if (rows != columns)
+        throw std::logic_error("Diagonal matrix must be square");
+    elements = new ArraySequence<T>(rows);
+    this->size = rows;
 }
 
 template <class T>
-DiagonalMatrix<T>::DiagonalMatrix(int length, T *elements)
+DiagonalMatrix<T>::DiagonalMatrix(int rows, int columns, T *elements)
 {
-    int pos = 0;
-    this->elements = new T[length];
-    for (int i = 0; i < length * length; i++)
+    if (rows != columns)
+        throw std::logic_error("Diagonal matrix must be square");
+    this->elements = new ArraySequence<T>(rows);
+    this->size = rows;
+    for (int i = 0; i < this->size; i++)
     {
-        this->elements[i] = elements[pos];
-        pos += length + 1;
+        this->elements->InsertAt(columns * i + i, i);
     }
+}
+
+template <class T>
+void DiagonalMatrix<T>::Set(T value, int row, int column)
+{
+    if (row != column)
+        throw std::logic_error("This element can not be set in diagonal matrix");
+    else
+        this->elements->InsertAt(value, row);
+}
+
+template <class T>
+T DiagonalMatrix<T>::Get(int row, int column)
+{
+    if ((row < 0) || (row >= size) || (column < 0) || (column >= size))
+        throw std::out_of_range("index is out of range");
+    if (row != column)
+        return 0;
+    else
+        return this->elements->Get(row);
+}
+
+template <class T>
+int DiagonalMatrix<T>::GetSize()
+{
+    return this->size;
 }
 
 template <class T>
 void DiagonalMatrix<T>::Addition(DiagonalMatrix<T> *matrix)
 {
-    if (this->length != matrix->length)
+    if (this->size != matrix->size)
     {
         throw std::logic_error("matrices have different sizes");
     }
-    for (int i = 0; i < this->length; i++)
+    for (int i = 0; i < this->size; i++)
     {
-        this->elements[i] = matrix->elements[i];
+        this->elements->InsertAt(this->elements->Get(i) + matrix->elements->Get(i), i);
     }
 }
 
@@ -72,12 +94,10 @@ template <class T>
 void DiagonalMatrix<T>::MultiplicationByScalar(T scalar)
 {
     if (scalar == 0)
-    {
         throw std::logic_error("matrix can't be multiplied by zero scalar");
-    }
-    for (int i = 0; i < this->length; i++)
+    for (int i = 0; i < this->size; i++)
     {
-        this->elements[i] *= scalar;
+        this->elements->InsertAt(this->elements->Get())
     }
 }
 
@@ -85,12 +105,18 @@ template <class T>
 T *DiagonalMatrix<T>::MatrixNorm()
 {
     T *Norms = new T[3];
-    Norms[0] = *std::max_element(this->elements, this->elements + this->length);
-    Norms[1] = Norms[0];
-    Norms[2] = this->elements[0] * this->elements[0];
-    for (int i = 1; i < this->length; i++)
+    Norms[0] = this->elements->Get(0);
+    for (int i = 1; i < size; i++)
     {
-        Norms[2] += (this->elements[i] * this->elements[i]);
+        if (this->elements->Get(i) > Norms[0])
+            Norms[0] = this->elements->Get(i);
+    }
+
+    Norms[1] = Norms[0];
+    Norms[2] = this->elements->Get(0) * this->elements->Get(0);
+    for (int i = 1; i < this->size; i++)
+    {
+        Norms[2] += (this->elements->Get(i) * this->elements->Get(i));
     }
     Norms[2] = sqrt(Norms[2]);
     return Norms;

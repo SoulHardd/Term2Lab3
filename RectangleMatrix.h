@@ -15,9 +15,13 @@ public:
     RectangleMatrix(int rows, int columns, T *elements);
 
     void Addition(RectangleMatrix<T> *matrix);
-    void MultiplicationByScalar(T scalar);
+    void MultiplicationByScalar(const T &scalar);
+    void Set(T value, int row, int column);
+
     T *MatrixNorm();
     T Get(int row, int column);
+    int GetRowSize();
+    int GetColumnSize();
 
     void SwapRows(int row_1, int row_2);
     void SwapColumns(int col_1, int col_2);
@@ -33,17 +37,13 @@ RectangleMatrix<T>::RectangleMatrix()
 {
     rows = 0;
     columns = 0;
-    elements = nullptr;
+    elements = new ArraySequence<T>;
 }
 
 template <class T>
 RectangleMatrix<T>::RectangleMatrix(int rows, int columns)
 {
-    elements = new T *[rows];
-    for (int i = 0; i < rows; i++)
-    {
-        elements[i] = new T[columns];
-    }
+    elements = new ArraySequence<T>(rows * columns);
     this->rows = rows;
     this->columns = columns;
 }
@@ -51,19 +51,15 @@ RectangleMatrix<T>::RectangleMatrix(int rows, int columns)
 template <class T>
 RectangleMatrix<T>::RectangleMatrix(int rows, int columns, T *elements)
 {
-    int pos = 0;
-    this->elements = new T *[rows];
-    for (int i = 0; i < rows; i++)
-    {
-        this->elements[i] = new T[columns];
-        for (int j = 0; j < columns; j++)
-        {
-            this->elements[i][j] = elements[pos];
-            pos++;
-        }
-    }
     this->rows = rows;
     this->columns = columns;
+    this->elements = new ArraySequence<T>(elements, rows * columns);
+}
+
+template <class T>
+void RectangleMatrix<T>::Set(T value, int row, int column)
+{
+    this->elements->InsertAt(value, columns * row + column);
 }
 
 template <class T>
@@ -71,7 +67,19 @@ T RectangleMatrix<T>::Get(int row, int column)
 {
     if ((row < 0) || (row >= this->rows) || (column < 0) || (column >= this->columns))
         throw std::out_of_range("index is out of range");
-    return this->elements[row][column];
+    return this->elements->Get(columns * row + column);
+}
+
+template <class T>
+int RectangleMatrix<T>::GetRowSize()
+{
+    return this->rows;
+}
+
+template <class T>
+int RectangleMatrix<T>::GetColumnSize()
+{
+    return this->columns;
 }
 
 template <class T>
@@ -81,28 +89,22 @@ void RectangleMatrix<T>::Addition(RectangleMatrix<T> *matrix)
     {
         throw std::logic_error("matrices have different sizes");
     }
-    for (int i = 0; i < rows; i++)
+    for (int i = 0; i < rows * columns; i++)
     {
-        for (int j = 0; j < columns; j++)
-        {
-            this->elements[i][j] += matrix->elements[i][j];
-        }
+        this->elements->InsertAt(this->elements->Get(i) + matrix->elements->Get(i), i);
     }
 }
 
 template <class T>
-void RectangleMatrix<T>::MultiplicationByScalar(T scalar)
+void RectangleMatrix<T>::MultiplicationByScalar(const T &scalar)
 {
     if (scalar == 0)
     {
         throw std::logic_error("matrix can't be multiplied by zero scalar");
     }
-    for (int i = 0; i < this->rows; i++)
+    for (int i = 0; i < rows * columns; i++)
     {
-        for (int j = 0; j < this->columns; j++)
-        {
-            this->elements[i][j] *= scalar;
-        }
+        this->elements->InsertAt(this->elements->Get(i) * scalar, i);
     }
 }
 
@@ -110,127 +112,128 @@ template <class T>
 T *RectangleMatrix<T>::MatrixNorm()
 {
     T *Norms = new T[3];
-    T *rowsSum = new T[this->rows];
-    T *columnsSum = new T[this->columns];
+    T *rowsSum = new T[rows];
+    T *columnsSum = new T[columns];
     T tmp;
-    for (int i = 0; i < this->rows; i++)
+    for (int i = 0; i < rows; i++)
     {
-        tmp = this->elements[i][0];
-        for (int j = 1; j < this->columns; j++)
+        tmp = this->elements->Get(columns * i);
+        for (int j = 1; j < columns; j++)
         {
-            tmp += this->elements[i][j];
+            tmp += this->elements->Get(columns * i + j);
         }
         rowsSum[i] = tmp;
     }
 
-    for (int i = 0; i < this->columns; i++)
+    for (int i = 0; i < columns; i++)
     {
-        tmp = this->elements[0][i];
-        for (int j = 1; j < this->rows; j++)
+        tmp = this->elements->Get(i);
+        for (int j = 1; j < rows; j++)
         {
-            tmp += this->elements[j][i];
+            tmp += this->elements->Get(columns * j + i);
         }
         columnsSum[i] = tmp;
     }
 
-    for (int i = 0; i < this->rows; i++)
+    for (int i = 0; i < rows; i++)
     {
-        for (int j = 0; j < this->columns; j++)
+        for (int j = 0; j < columns; j++)
         {
             if (i == 0 && j == 0)
             {
-                tmp = (this->elements[0][0] * this->elements[0][0]);
+                tmp = (this->elements->Get(0) * this->elements->Get(0));
             }
             else
             {
-                tmp += (this->elements[i][j] * this->elements[i][j]);
+                tmp += (this->elements->Get(columns * i + j) * this->elements->Get(columns * i + j));
             }
         }
     }
-    Norms[0] = *std::max_element(rowsSum, rowsSum + this->rows);
-    Norms[1] = *std::max_element(columnsSum, columnsSum + this->columns);
+    Norms[0] = *std::max_element(rowsSum, rowsSum + rows);
+    Norms[1] = *std::max_element(columnsSum, columnsSum + columns);
     Norms[2] = sqrt(tmp);
-
+    delete[] rowsSum;
+    delete[] columnsSum;
     return Norms;
 }
 
 template <class T>
 void RectangleMatrix<T>::SwapRows(int row_1, int row_2)
 {
-    row_1--;
-    row_2--;
-    for (int i = 0; i < this->columns; i++)
+    if (row_1 < 0 || row_2 < 0 || row_1 > rows || row_2 > rows)
+        throw std::out_of_range("rows are out of range");
+    T tmp;
+    for (int i = 0; i < columns; i++)
     {
-        T temp = this->elements[row_1][i];
-        this->elements[row_1][i] = this->elements[row_2][i];
-        this->elements[row_2][i] = temp;
+        tmp = this->elements->Get(columns * row_1 + i);
+        this->elements->InsertAt(this->elements->Get(columns * row_2 + i), columns * row_1 + i);
+        this->elements->InsertAt(tmp, columns * row_2 + i);
     }
 }
 
 template <class T>
 void RectangleMatrix<T>::SwapColumns(int col_1, int col_2)
 {
-    col_1--;
-    col_2--;
-    for (int i = 0; i < this->rows; i++)
+    if (col_1 < 0 || col_2 < 0 || col_1 > columns || col_2 > columns)
+        throw std::out_of_range("columns are out of range");
+    T tmp;
+    for (int i = 0; i < rows; i++)
     {
-        T temp = this->elements[i][col_1];
-        this->elements[i][col_1] = this->elements[i][col_2];
-        this->elements[i][col_2] = temp;
+        tmp = this->elements->Get(columns * i + col_1);
+        this->elements->InsertAt(this->elements->Get(columns * i + col_2), columns * i + col_1);
+        this->elements->InsertAt(tmp, columns * i + col_2);
     }
 }
 
 template <class T>
 void RectangleMatrix<T>::MultiplicationRowByNum(int row, T num)
 {
-    row--;
-    for (int i = 0; i < this->columns; i++)
+    for (int i = 0; i < columns; i++)
     {
-        this->elements[row][i] *= num;
+        this->elements->InsertAt(this->elements->Get(columns * row + i) * num, columns * row + i);
     }
 }
 
 template <class T>
 void RectangleMatrix<T>::MultiplicationColumnByNum(int column, T num)
 {
-    column--;
-    for (int i = 0; i < this->rows; i++)
+    for (int i = 0; i < rows; i++)
     {
-        this->elements[i][column] *= num;
+        this->elements->InsertAt(this->elements->Get(columns * i + column) * num, columns * i + column);
     }
 }
 
 template <class T>
 void RectangleMatrix<T>::AddRowToRow(int row_1, int row_2)
 {
-    row_1--;
-    row_2--;
-    for (int i = 0; i < this->columns; i++)
+    if (row_1 < 0 || row_2 < 0 || row_1 > rows || row_2 > rows)
+        throw std::out_of_range("rows are out of range");
+    for (int i = 0; i < columns; i++)
     {
-        this->elements[row_1][i] += this->elements[row_2][i];
+        this->elements->InsertAt(this->elements->Get(columns * row_1 + i) + this->elements->Get(columns * row_2 + i), columns * row_1 + i);
     }
 }
 
 template <class T>
-void RectangleMatrix<T>::AddColumnToColumn(int column_1, int column_2)
+void RectangleMatrix<T>::AddColumnToColumn(int col_1, int col_2)
 {
-    column_1--;
-    column_2--;
-    for (int i = 0; i < this->rows; i++)
+    if (col_1 < 0 || col_2 < 0 || col_1 > columns || col_2 > columns)
+        throw std::out_of_range("columns are out of range");
+    for (int i = 0; i < rows; i++)
     {
-        this->elements[i][column_1] += this->elements[i][column_2];
+        this->elements->InsertAt(this->elements->Get(columns * i + col_1) + this->elements->Get(columns * i + col_2), columns * i + col_1);
     }
 }
 
 template <class T>
 RectangleMatrix<T> *RectangleMatrix<T>::Transpose()
 {
-    RectangleMatrix<T> *TransposeMatrix = new RectangleMatrix<T>(this->columns, this->rows);
-    for (int i = 0; i < this->rows; i++)
+    RectangleMatrix<T> *TransposeMatrix = new RectangleMatrix<T>(columns, rows);
+    for (int i = 0; i < rows; i++)
     {
-        for (int j = 0; j < this->columns; j++)
+        for (int j = 0; j < columns; j++)
         {
-            TransposeMatrix->elements[j][i] = this->elements[i][j];
+            TransposeMatrix->elements->InsertAt(this->elements->Get(columns * i + j), columns * j + i);
         }
     }
     return TransposeMatrix;
