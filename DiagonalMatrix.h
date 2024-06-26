@@ -13,23 +13,24 @@ private:
 public:
     DiagonalMatrix();
     ~DiagonalMatrix();
-    DiagonalMatrix(int rows, int columns);
-    DiagonalMatrix(int rows, int columns, T *elements);
+    DiagonalMatrix(const int &rows, const int &columns);
+    DiagonalMatrix(const int &rows, const int &columns, T *elements);
+    DiagonalMatrix(const Matrix<T> &matrix);
 
-    Matrix<T> *Addition(Matrix<T> *matrix);
-    Matrix<T> *MultiplicationByScalar(T scalar);
+    Matrix<T> *Addition(const Matrix<T> &matrix);
+    Matrix<T> *MultiplicationByScalar(const T &scalar);
     T *MatrixNorm();
-    T Get(int row, int column);
-    Matrix<T> *Set(T value, int row, int column);
+    T Get(const int &row, const int &column);
+    Matrix<T> *Set(const T &value, const int &row, const int &column);
     int GetRowSize();
     int GetColumnSize();
 
-    Matrix<T> *SwapRows(int row_1, int row_2);
-    Matrix<T> *SwapColumns(int col_1, int col_2);
-    Matrix<T> *MultiplicationRowByNum(int row, T num);
-    Matrix<T> *MultiplicationColumnByNum(int column, T num);
-    Matrix<T> *AddRowToRow(int row_1, int row_2);
-    Matrix<T> *AddColumnToColumn(int column_1, int column_2);
+    Matrix<T> *SwapRows(const int &row_1, const int &row_2);
+    Matrix<T> *SwapColumns(const int &col_1, const int &col_2);
+    Matrix<T> *MultiplicationRowByNum(const int &row, const T &num);
+    Matrix<T> *MultiplicationColumnByNum(const int &column, const T &num);
+    Matrix<T> *AddRowToRow(const int &row_1, const int &row_2);
+    Matrix<T> *AddColumnToColumn(const int &column_1, const int &column_2);
     Matrix<T> *Transpose();
 };
 
@@ -47,7 +48,7 @@ DiagonalMatrix<T>::~DiagonalMatrix()
 }
 
 template <class T>
-DiagonalMatrix<T>::DiagonalMatrix(int rows, int columns)
+DiagonalMatrix<T>::DiagonalMatrix(const int &rows, const int &columns)
 {
     if (rows != columns)
         throw std::logic_error("Diagonal matrix must be square");
@@ -56,7 +57,7 @@ DiagonalMatrix<T>::DiagonalMatrix(int rows, int columns)
 }
 
 template <class T>
-DiagonalMatrix<T>::DiagonalMatrix(int rows, int columns, T *elements)
+DiagonalMatrix<T>::DiagonalMatrix(const int &rows, const int &columns, T *elements)
 {
     if (rows != columns)
         throw std::logic_error("Diagonal matrix must be square");
@@ -69,7 +70,15 @@ DiagonalMatrix<T>::DiagonalMatrix(int rows, int columns, T *elements)
 }
 
 template <class T>
-Matrix<T> *DiagonalMatrix<T>::Set(T value, int row, int column)
+DiagonalMatrix<T>::DiagonalMatrix(const Matrix<T> &matrix)
+{
+    this->rows = (static_cast<const DiagonalMatrix<T> *>(&matrix))->rows;
+    this->columns = (static_cast<const DiagonalMatrix<T> *>(&matrix))->columns;
+    this->elements = new ArraySequence<T>(*((static_cast<const DigonalMatrix<T> *>(&matrix))->elements));
+}
+
+template <class T>
+Matrix<T> *DiagonalMatrix<T>::Set(const T &value, const int &row, const int &column)
 {
     if (row != column)
         throw std::logic_error("This element can not be set in diagonal matrix");
@@ -79,7 +88,7 @@ Matrix<T> *DiagonalMatrix<T>::Set(T value, int row, int column)
 }
 
 template <class T>
-T DiagonalMatrix<T>::Get(int row, int column)
+T DiagonalMatrix<T>::Get(const int &row, const int &column)
 {
     if ((row < 0) || (row >= size) || (column < 0) || (column >= size))
         throw std::out_of_range("index is out of range");
@@ -102,9 +111,9 @@ int DiagonalMatrix<T>::GetColumnSize()
 }
 
 template <class T>
-Matrix<T> *DiagonalMatrix<T>::Addition(Matrix<T> *matrix)
+Matrix<T> *DiagonalMatrix<T>::Addition(const Matrix<T> &matrix)
 {
-    DiagonalMatrix<T> *tmp = static_cast<DiagonalMatrix<T> *>(matrix);
+    const DiagonalMatrix<T> *tmp = static_cast<const DiagonalMatrix<T> *>(&matrix);
     if (this->size != tmp->size)
     {
         throw std::logic_error("matrices have different sizes");
@@ -117,7 +126,7 @@ Matrix<T> *DiagonalMatrix<T>::Addition(Matrix<T> *matrix)
 }
 
 template <class T>
-Matrix<T> *DiagonalMatrix<T>::MultiplicationByScalar(T scalar)
+Matrix<T> *DiagonalMatrix<T>::MultiplicationByScalar(const T &scalar)
 {
     if (scalar == 0)
         throw std::logic_error("matrix can't be multiplied by zero scalar");
@@ -150,37 +159,37 @@ T *DiagonalMatrix<T>::MatrixNorm()
 }
 
 template <class T>
-Matrix<T> *DiagonalMatrix<T>::SwapRows(int row_1, int row_2)
+Matrix<T> *DiagonalMatrix<T>::SwapRows(const int &row_1, const int &row_2)
 {
     throw std::logic_error("This action can't be executed for diagonal matrix");
 }
 
 template <class T>
-Matrix<T> *DiagonalMatrix<T>::SwapColumns(int col_1, int col_2)
+Matrix<T> *DiagonalMatrix<T>::SwapColumns(const int &col_1, const int &col_2)
 {
     throw std::logic_error("This action can't be executed for diagonal matrix");
 }
 
 template <class T>
-Matrix<T> *DiagonalMatrix<T>::MultiplicationRowByNum(int row, T num)
+Matrix<T> *DiagonalMatrix<T>::MultiplicationRowByNum(const int &row, const T &num)
 {
     throw std::logic_error("This action can't be executed for diagonal matrix");
 }
 
 template <class T>
-Matrix<T> *DiagonalMatrix<T>::MultiplicationColumnByNum(int column, T num)
+Matrix<T> *DiagonalMatrix<T>::MultiplicationColumnByNum(const int &column, const T &num)
 {
     throw std::logic_error("This action can't be executed for diagonal matrix");
 }
 
 template <class T>
-Matrix<T> *DiagonalMatrix<T>::AddRowToRow(int row_1, int row_2)
+Matrix<T> *DiagonalMatrix<T>::AddRowToRow(const int &row_1, const int &row_2)
 {
     throw std::logic_error("This action can't be executed for diagonal matrix");
 }
 
 template <class T>
-Matrix<T> *DiagonalMatrix<T>::AddColumnToColumn(int column_1, int column_2)
+Matrix<T> *DiagonalMatrix<T>::AddColumnToColumn(const int &column_1, const int &column_2)
 {
     throw std::logic_error("This action can't be executed for diagonal matrix");
 }

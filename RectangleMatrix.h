@@ -13,25 +13,26 @@ private:
 
 public:
     RectangleMatrix();
-    RectangleMatrix(int rows, int columns);
-    RectangleMatrix(int rows, int columns, T *elements);
+    RectangleMatrix(const int &rows, const int &columns);
+    RectangleMatrix(const int &rows, const int &columns, T *elements);
     ~RectangleMatrix();
+    RectangleMatrix(const Matrix<T> &matrix);
 
     T *MatrixNorm();
-    T Get(int row, int column);
+    T Get(const int &row, const int &column);
     int GetRowSize();
     int GetColumnSize();
 
-    Matrix<T> *Addition(Matrix<T> *matrix);
-    Matrix<T> *MultiplicationByScalar(T scalar);
-    Matrix<T> *Set(T value, int row, int column);
+    Matrix<T> *Addition(const Matrix<T> &matrix);
+    Matrix<T> *MultiplicationByScalar(const T &scalar);
+    Matrix<T> *Set(const T &value, const int &row, const int &column);
 
-    Matrix<T> *SwapRows(int row_1, int row_2);
-    Matrix<T> *SwapColumns(int col_1, int col_2);
-    Matrix<T> *MultiplicationRowByNum(int row, T num);
-    Matrix<T> *MultiplicationColumnByNum(int column, T num);
-    Matrix<T> *AddRowToRow(int row_1, int row_2);
-    Matrix<T> *AddColumnToColumn(int column_1, int column_2);
+    Matrix<T> *SwapRows(const int &row_1, const int &row_2);
+    Matrix<T> *SwapColumns(const int &col_1, const int &col_2);
+    Matrix<T> *MultiplicationRowByNum(const int &row, const T &num);
+    Matrix<T> *MultiplicationColumnByNum(const int &column, const T &num);
+    Matrix<T> *AddRowToRow(const int &row_1, const int &row_2);
+    Matrix<T> *AddColumnToColumn(const int &column_1, const int &column_2);
     Matrix<T> *Transpose();
 };
 
@@ -50,7 +51,7 @@ RectangleMatrix<T>::RectangleMatrix()
 }
 
 template <class T>
-RectangleMatrix<T>::RectangleMatrix(int rows, int columns)
+RectangleMatrix<T>::RectangleMatrix(const int &rows, const int &columns)
 {
     elements = new ArraySequence<T>(rows * columns);
     this->rows = rows;
@@ -58,7 +59,7 @@ RectangleMatrix<T>::RectangleMatrix(int rows, int columns)
 }
 
 template <class T>
-RectangleMatrix<T>::RectangleMatrix(int rows, int columns, T *elements)
+RectangleMatrix<T>::RectangleMatrix(const int &rows, const int &columns, T *elements)
 {
     this->rows = rows;
     this->columns = columns;
@@ -66,14 +67,22 @@ RectangleMatrix<T>::RectangleMatrix(int rows, int columns, T *elements)
 }
 
 template <class T>
-Matrix<T> *RectangleMatrix<T>::Set(T value, int row, int column)
+RectangleMatrix<T>::RectangleMatrix(const Matrix<T> &matrix)
+{
+    this->rows = (static_cast<const RectangleMatrix<T> *>(&matrix))->rows;
+    this->columns = (static_cast<const RectangleMatrix<T> *>(&matrix))->columns;
+    this->elements = new ArraySequence<T>(*((static_cast<const RectangleMatrix<T> *>(&matrix))->elements));
+}
+
+template <class T>
+Matrix<T> *RectangleMatrix<T>::Set(const T &value, const int &row, const int &column)
 {
     this->elements->InsertAt(value, columns * row + column);
     return this;
 }
 
 template <class T>
-T RectangleMatrix<T>::Get(int row, int column)
+T RectangleMatrix<T>::Get(const int &row, const int &column)
 {
     if ((row < 0) || (row >= this->rows) || (column < 0) || (column >= this->columns))
         throw std::out_of_range("index is out of range");
@@ -93,22 +102,22 @@ int RectangleMatrix<T>::GetColumnSize()
 }
 
 template <class T>
-Matrix<T> *RectangleMatrix<T>::Addition(Matrix<T> *matrix)
+Matrix<T> *RectangleMatrix<T>::Addition(const Matrix<T> &matrix)
 {
-    RectangleMatrix<T> *tmp = static_cast<RectangleMatrix<T> *>(matrix);
-    if (this->rows != tmp->rows || this->columns != tmp->columns)
+    // const RectangleMatrix<T> *tmp = static_cast<const RectangleMatrix<T> *>(&matrix);
+    if (this->rows != (static_cast<const RectangleMatrix<T> *>(&matrix))->rows || this->columns != (static_cast<const RectangleMatrix<T> *>(&matrix))->columns)
     {
         throw std::logic_error("matrices have different sizes");
     }
     for (int i = 0; i < rows * columns; i++)
     {
-        this->elements->InsertAt(this->elements->Get(i) + tmp->elements->Get(i), i);
+        this->elements->InsertAt(this->elements->Get(i) + (static_cast<const RectangleMatrix<T> *>(&matrix))->elements->Get(i), i);
     }
     return this;
 }
 
 template <class T>
-Matrix<T> *RectangleMatrix<T>::MultiplicationByScalar(T scalar)
+Matrix<T> *RectangleMatrix<T>::MultiplicationByScalar(const T &scalar)
 {
     if (scalar == 0)
     {
@@ -171,7 +180,7 @@ T *RectangleMatrix<T>::MatrixNorm()
 }
 
 template <class T>
-Matrix<T> *RectangleMatrix<T>::SwapRows(int row_1, int row_2)
+Matrix<T> *RectangleMatrix<T>::SwapRows(const int &row_1, const int &row_2)
 {
     if (row_1 < 0 || row_2 < 0 || row_1 > rows || row_2 > rows)
         throw std::out_of_range("rows are out of range");
@@ -186,7 +195,7 @@ Matrix<T> *RectangleMatrix<T>::SwapRows(int row_1, int row_2)
 }
 
 template <class T>
-Matrix<T> *RectangleMatrix<T>::SwapColumns(int col_1, int col_2)
+Matrix<T> *RectangleMatrix<T>::SwapColumns(const int &col_1, const int &col_2)
 {
     if (col_1 < 0 || col_2 < 0 || col_1 > columns || col_2 > columns)
         throw std::out_of_range("columns are out of range");
@@ -201,7 +210,7 @@ Matrix<T> *RectangleMatrix<T>::SwapColumns(int col_1, int col_2)
 }
 
 template <class T>
-Matrix<T> *RectangleMatrix<T>::MultiplicationRowByNum(int row, T num)
+Matrix<T> *RectangleMatrix<T>::MultiplicationRowByNum(const int &row, const T &num)
 {
     for (int i = 0; i < columns; i++)
     {
@@ -211,7 +220,7 @@ Matrix<T> *RectangleMatrix<T>::MultiplicationRowByNum(int row, T num)
 }
 
 template <class T>
-Matrix<T> *RectangleMatrix<T>::MultiplicationColumnByNum(int column, T num)
+Matrix<T> *RectangleMatrix<T>::MultiplicationColumnByNum(const int &column, const T &num)
 {
     for (int i = 0; i < rows; i++)
     {
@@ -221,7 +230,7 @@ Matrix<T> *RectangleMatrix<T>::MultiplicationColumnByNum(int column, T num)
 }
 
 template <class T>
-Matrix<T> *RectangleMatrix<T>::AddRowToRow(int row_1, int row_2)
+Matrix<T> *RectangleMatrix<T>::AddRowToRow(const int &row_1, const int &row_2)
 {
     if (row_1 < 0 || row_2 < 0 || row_1 > rows || row_2 > rows)
         throw std::out_of_range("rows are out of range");
@@ -233,7 +242,7 @@ Matrix<T> *RectangleMatrix<T>::AddRowToRow(int row_1, int row_2)
 }
 
 template <class T>
-Matrix<T> *RectangleMatrix<T>::AddColumnToColumn(int col_1, int col_2)
+Matrix<T> *RectangleMatrix<T>::AddColumnToColumn(const int &col_1, const int &col_2)
 {
     if (col_1 < 0 || col_2 < 0 || col_1 > columns || col_2 > columns)
         throw std::out_of_range("columns are out of range");

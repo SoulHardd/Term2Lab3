@@ -32,9 +32,9 @@ public:
         this->elements = new DynamicArray<T>(elements, size);
     }
 
-    ArraySequence(const ArraySequence<T> &array)
+    ArraySequence(const Sequence<T> &array)
     {
-        this->elements = new DynamicArray<T>(*array.elements);
+        this->elements = new DynamicArray<T>(*((static_cast<const ArraySequence<T> *>(&array))->elements));
     }
 
     T Get(int index)

@@ -97,7 +97,7 @@ void tests()
     // Addition test
     cout << "Addition test\n\n";
     cout << "Square Matrix:\n";
-    SqrMatrix->Addition(SqrMatrix);
+    SqrMatrix->Addition(*SqrMatrix);
     int CorrectSqrMatrixData1[4][4] = {{2, 4, 6, 8}, {10, 12, 14, 16}, {18, 8, 10, 12}, {4, 12, 10, 8}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectSqrMatrixData1[0][0], 4, 4);
@@ -109,7 +109,7 @@ void tests()
         cout << "success\n\n";
 
     cout << "Rectangle Matrix:\n";
-    RectMatrix->Addition(RectMatrix);
+    RectMatrix->Addition(*RectMatrix);
     int CorrectRectMatrixData1[2][3] = {{2, 8, 10}, {10, 12, 8}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectRectMatrixData1[0][0], 2, 3);
@@ -121,7 +121,7 @@ void tests()
         cout << "success\n\n";
 
     cout << "Diagonal Matrix:\n";
-    DiaMatrix->Addition(DiaMatrix);
+    DiaMatrix->Addition(*DiaMatrix);
     double CorrectDiaMatrixData1[3][3] = {{2.4, 0, 0}, {0, 6.8, 0}, {0, 0, 11.2}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectDiaMatrixData1[0][0], 3, 3);
@@ -133,7 +133,7 @@ void tests()
         cout << "success\n\n";
 
     cout << "Triangle Matrix:\n";
-    TriaMatrix->Addition(TriaMatrix);
+    TriaMatrix->Addition(*TriaMatrix);
     int CorrectTriaMatrixData1[5][5] = {{2, 4, 6, 8, 10}, {0, 12, 14, 16, 18}, {0, 0, 20, 22, 24}, {0, 0, 0, 26, 28}, {0, 0, 0, 0, 30}};
     cout << "\nExpexted:\n";
     PrintArray(&CorrectTriaMatrixData1[0][0], 5, 5);
