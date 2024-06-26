@@ -15,6 +15,7 @@ public:
     RectangleMatrix();
     RectangleMatrix(int rows, int columns);
     RectangleMatrix(int rows, int columns, T *elements);
+    ~RectangleMatrix();
 
     T *MatrixNorm();
     T Get(int row, int column);
@@ -33,6 +34,12 @@ public:
     Matrix<T> *AddColumnToColumn(int column_1, int column_2);
     Matrix<T> *Transpose();
 };
+
+template <class T>
+RectangleMatrix<T>::~RectangleMatrix()
+{
+    delete[] elements;
+}
 
 template <class T>
 RectangleMatrix<T>::RectangleMatrix()

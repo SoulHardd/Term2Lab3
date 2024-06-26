@@ -19,6 +19,7 @@ private:
 
 public:
     TriangleMatrix();
+    ~TriangleMatrix();
     TriangleMatrix(int rows, int columns);
     TriangleMatrix(int rows, int columns, T *elements, TrMatrixType Mtype);
 
@@ -45,6 +46,12 @@ TriangleMatrix<T>::TriangleMatrix()
     elements = new ArraySequence<T>;
     size = 0;
     MType = NOTDEFINED;
+}
+
+template <class T>
+TriangleMatrix<T>::~TriangleMatrix()
+{
+    delete[] elements;
 }
 
 template <class T>

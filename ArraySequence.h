@@ -17,6 +17,11 @@ public:
         this->elements = new DynamicArray<T>();
     }
 
+    ~ArraySequence()
+    {
+        delete[] elements;
+    }
+
     ArraySequence(int size)
     {
         this->elements = new DynamicArray<T>(size);

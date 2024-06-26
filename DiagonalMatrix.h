@@ -12,6 +12,7 @@ private:
 
 public:
     DiagonalMatrix();
+    ~DiagonalMatrix();
     DiagonalMatrix(int rows, int columns);
     DiagonalMatrix(int rows, int columns, T *elements);
 
@@ -37,6 +38,12 @@ DiagonalMatrix<T>::DiagonalMatrix()
 {
     elements = new ArraySequence<T>;
     size = 0;
+}
+
+template <class T>
+DiagonalMatrix<T>::~DiagonalMatrix()
+{
+    delete[] elements;
 }
 
 template <class T>
